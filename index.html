@@ -375,11 +375,9 @@
      PRINT / @media print — PRIMARY EXPORT
   ═══════════════════════════════════════ */
   @media print {
-    body * { visibility: hidden !important; }
-    #print-area, #print-area * { visibility: visible !important; }
+    body > *:not(#print-area) { display: none !important; }
     #print-area {
-      position: fixed !important;
-      top: 0 !important; left: 0 !important;
+      display: block !important;
       width: 100% !important;
       background: #fff !important;
       padding: 24px 28px !important;
@@ -573,19 +571,19 @@
       <label id="lbl-model">Model &amp; Variant</label>
       <select id="vehicleSelect">
         <option value="">— Select Model &amp; Variant —</option>
-        <option value="NISSAN NAVARA 2WD 6MT VE|38500">NISSAN NAVARA 2WD 6MT VE — USD 38,500</option>
-        <option value="NISSAN NAVARA 2WD 7AT VE|42000">NISSAN NAVARA 2WD 7AT VE — USD 42,000</option>
-        <option value="NISSAN NAVARA 4WD 6MT VE|44500">NISSAN NAVARA 4WD 6MT VE — USD 44,500</option>
-        <option value="NISSAN NAVARA 4WD 7AT VL|48000">NISSAN NAVARA 4WD 7AT VL — USD 48,000</option>
-        <option value="NISSAN NAVARA 4WD 7AT PRO-4X|51500">NISSAN NAVARA 4WD 7AT PRO-4X — USD 51,500</option>
-        <option value="NISSAN TERRA 2WD 7AT|60500">NISSAN TERRA 2WD 7AT — USD 60,500</option>
-        <option value="NISSAN TERRA 4WD 7AT|64500">NISSAN TERRA 4WD 7AT — USD 64,500</option>
-        <option value="NISSAN TERRA 4WD 7AT SV|65500">NISSAN TERRA 4WD 7AT SV — USD 65,500</option>
-        <option value="NISSAN X-TRAIL E-POWER AWD E-4ORCE|55500">NISSAN X-TRAIL E-POWER AWD E-4ORCE — USD 55,500</option>
-        <option value="NISSAN X-TRAIL E-POWER 2WD|50500">NISSAN X-TRAIL E-POWER 2WD — USD 50,500</option>
-        <option value="NISSAN PATROL 4WD 9AT|195000">NISSAN PATROL 4WD 9AT — USD 195,000</option>
-        <option value="NISSAN MAGNITE PREMIUM|26500">NISSAN MAGNITE PREMIUM — USD 26,500</option>
-        <option value="NISSAN ALMERA 2WD AT VL|26900">NISSAN ALMERA 2WD AT VL — USD 26,900</option>
+        <option value="NISSAN NAVARA 2WD 6MT VE|38500">NISSAN NAVARA 2WD 6MT VE</option>
+        <option value="NISSAN NAVARA 2WD 7AT VE|42000">NISSAN NAVARA 2WD 7AT VE</option>
+        <option value="NISSAN NAVARA 4WD 6MT VE|44500">NISSAN NAVARA 4WD 6MT VE</option>
+        <option value="NISSAN NAVARA 4WD 7AT VL|48000">NISSAN NAVARA 4WD 7AT VL</option>
+        <option value="NISSAN NAVARA 4WD 7AT PRO-4X|51500">NISSAN NAVARA 4WD 7AT PRO-4X</option>
+        <option value="NISSAN TERRA 2WD 7AT|60500">NISSAN TERRA 2WD 7AT</option>
+        <option value="NISSAN TERRA 4WD 7AT|64500">NISSAN TERRA 4WD 7AT</option>
+        <option value="NISSAN TERRA 4WD 7AT SV|65500">NISSAN TERRA 4WD 7AT SV</option>
+        <option value="NISSAN X-TRAIL E-POWER AWD E-4ORCE|55500">NISSAN X-TRAIL E-POWER AWD E-4ORCE</option>
+        <option value="NISSAN X-TRAIL E-POWER 2WD|50500">NISSAN X-TRAIL E-POWER 2WD</option>
+        <option value="NISSAN PATROL 4WD 9AT|195000">NISSAN PATROL 4WD 9AT</option>
+        <option value="NISSAN MAGNITE PREMIUM|26500">NISSAN MAGNITE PREMIUM</option>
+        <option value="NISSAN ALMERA 2WD AT VL|26900">NISSAN ALMERA 2WD AT VL</option>
       </select>
     </div>
     <div class="field">
@@ -601,7 +599,7 @@
   <div class="section-body">
 
     <div class="field">
-      <label id="lbl-price">Vehicle Price (incl. Reg. &amp; 3rd Party Insurance)</label>
+      <label id="lbl-price">Vehicle Price (incl. Reg. &amp; Taxes)</label>
       <div class="field-prefixed">
         <span class="field-prefix" id="pfx-price">USD</span>
         <input type="number" id="vehiclePrice" placeholder="0" inputmode="decimal" autocomplete="off">
@@ -766,10 +764,6 @@
       <div class="s-value" id="r-tenure">—</div>
     </div>
     <div class="summary-card">
-      <div class="s-label" id="lbl-r-total">Total Repayment</div>
-      <div class="s-value accent-amber" id="r-total">—</div>
-    </div>
-    <div class="summary-card">
       <div class="s-label" id="lbl-r-rate">Interest Rate</div>
       <div class="s-value" id="r-rate">—</div>
     </div>
@@ -778,7 +772,7 @@
   <div class="breakdown">
     <div class="breakdown-title" id="lbl-breakdown">Price Breakdown</div>
     <div class="breakdown-row">
-      <span class="b-label" id="lbl-br-price">Vehicle Price (incl. Reg. &amp; 3rd Party Ins.)</span>
+      <span class="b-label" id="lbl-br-price">Vehicle Price (incl. Reg. &amp; Taxes)</span>
       <span class="b-value" id="br-price">—</span>
     </div>
     <div class="breakdown-row" id="br-disc-row" style="display:none">
@@ -862,7 +856,7 @@
 
   <div class="pa-section-title" id="pa-breakdown-title">Price Breakdown</div>
   <div class="pa-row">
-    <span class="pa-lbl" id="pa-lbl-price">Vehicle Price (incl. Reg. &amp; 3rd Party Ins.)</span>
+    <span class="pa-lbl" id="pa-lbl-price">Vehicle Price (incl. Reg. &amp; Taxes)</span>
     <span class="pa-val" id="pa-price">—</span>
   </div>
   <div class="pa-row" id="pa-disc-row" style="display:none">
@@ -891,10 +885,6 @@
     <div class="pa-row">
       <span class="pa-lbl" id="pa-lbl-tenure">Loan Tenure</span>
       <span class="pa-val" id="pa-tenure">—</span>
-    </div>
-    <div class="pa-row total">
-      <span class="pa-lbl" id="pa-lbl-total">Total Repayment</span>
-      <span class="pa-val" id="pa-total">—</span>
     </div>
   </div>
 
@@ -979,7 +969,7 @@ var LANG = {
     lbl_model: 'Model & Variant',
     lbl_colour: 'Colour',
     sec_pricing: 'Vehicle Pricing',
-    lbl_price: 'Vehicle Price (incl. Reg. & 3rd Party Insurance)',
+    lbl_price: 'Vehicle Price (incl. Reg. & Taxes)',
     lbl_discount: 'Cash Discount',
     lbl_ntp: '= Net Transacted Price',
     lbl_dp: 'Down Payment',
@@ -1000,10 +990,9 @@ var LANG = {
     lbl_monthly: 'Monthly Repayment',
     lbl_r_loan: 'Loan Amount',
     lbl_r_tenure: 'Tenure',
-    lbl_r_total: 'Total Repayment',
     lbl_r_rate: 'Interest Rate',
     lbl_breakdown: 'Price Breakdown',
-    lbl_br_price: 'Vehicle Price (incl. Reg. & 3rd Party Ins.)',
+    lbl_br_price: 'Vehicle Price (incl. Reg. & Taxes)',
     lbl_br_disc: 'Cash Discount',
     lbl_br_ntp: '= Net Transacted Price',
     lbl_br_dp: 'Down Payment',
@@ -1041,7 +1030,7 @@ var LANG = {
     lbl_model: 'ຮຸ່ນ & ລຸ້ນລົດ',
     lbl_colour: 'ສີ',
     sec_pricing: 'ລາຄາລົດ',
-    lbl_price: 'ລາຄາລົດ (ລວມທະບຽນ & ປະກັນໄພຄູ່ທີສາມ)',
+    lbl_price: 'ລາຄາລົດ (ລວມທະບຽນ & ພາສີ)',
     lbl_discount: 'ສ່ວນຫຼຸດເງິນສົດ',
     lbl_ntp: '= ລາຄາສຸດທິ',
     lbl_dp: 'ເງິນດາວ',
@@ -1062,10 +1051,9 @@ var LANG = {
     lbl_monthly: 'ຄ່າງວດລາຍເດືອນ',
     lbl_r_loan: 'ຈຳນວນສິນເຊື່ອ',
     lbl_r_tenure: 'ໄລຍະ',
-    lbl_r_total: 'ຍອດລວມຊຳລະ',
     lbl_r_rate: 'ອັດຕາດອກເບ້ຍ',
     lbl_breakdown: 'ລາຍລະອຽດລາຄາ',
-    lbl_br_price: 'ລາຄາລົດ (ລວມທະບຽນ & ປະກັນໄພ)',
+    lbl_br_price: 'ລາຄາລົດ (ລວມທະບຽນ & ພາສີ)',
     lbl_br_disc: 'ສ່ວນຫຼຸດ',
     lbl_br_ntp: '= ລາຄາສຸດທິ',
     lbl_br_dp: 'ເງິນດາວ',
@@ -1103,7 +1091,7 @@ var LANG = {
     lbl_model: '车型及配置',
     lbl_colour: '颜色',
     sec_pricing: '车辆价格',
-    lbl_price: '车价（含注册费及第三方险）',
+    lbl_price: '车价（含注册费及税费）',
     lbl_discount: '现金折扣',
     lbl_ntp: '= 净成交价',
     lbl_dp: '首期付款',
@@ -1124,10 +1112,9 @@ var LANG = {
     lbl_monthly: '每月还款额',
     lbl_r_loan: '贷款金额',
     lbl_r_tenure: '期限',
-    lbl_r_total: '还款总额',
     lbl_r_rate: '利率',
     lbl_breakdown: '价格明细',
-    lbl_br_price: '车价（含注册费及第三方险）',
+    lbl_br_price: '车价（含注册费及税费）',
     lbl_br_disc: '现金折扣',
     lbl_br_ntp: '= 净成交价',
     lbl_br_dp: '首期付款',
@@ -1278,7 +1265,6 @@ function applyLang(lang) {
   setText('lbl-monthly', t('lbl_monthly'));
   setText('lbl-r-loan', t('lbl_r_loan'));
   setText('lbl-r-tenure', t('lbl_r_tenure'));
-  setText('lbl-r-total', t('lbl_r_total'));
   setText('lbl-r-rate', t('lbl_r_rate'));
   setText('lbl-breakdown', t('lbl_breakdown'));
   setText('lbl-br-price', t('lbl_br_price'));
@@ -1558,7 +1544,6 @@ function calculate() {
   document.getElementById('r-monthly-sub').textContent = tenure + ' ' + t('months') + ' @ ' + rate + '%/' + t('per_month');
   document.getElementById('r-loan').textContent        = fmtUSD(usdLoan);
   document.getElementById('r-tenure').textContent      = tenure + ' ' + t('months');
-  document.getElementById('r-total').textContent       = fmtUSD(usdTotal);
   document.getElementById('r-rate').textContent        = rate + '% / ' + t('per_month');
 
   // Breakdown
@@ -1643,8 +1628,6 @@ function openExport() {
   document.getElementById('pa-rate').textContent        = r.rate + '% ' + t('per_month');
   document.getElementById('pa-lbl-tenure').textContent  = t('lbl_tenure');
   document.getElementById('pa-tenure').textContent      = r.tenure + ' ' + t('months') + ' (' + (r.tenure/12).toFixed(1) + ' yrs)';
-  document.getElementById('pa-lbl-total').textContent   = t('lbl_r_total');
-  document.getElementById('pa-total').textContent       = fmtUSD(r.usdTotal);
   document.getElementById('pa-footer-date').textContent = dateStr;
 
   if (r.usdDisc > 0) {
