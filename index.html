@@ -602,7 +602,7 @@
       <label id="lbl-price">Vehicle Price (incl. Reg. &amp; Taxes)</label>
       <div class="field-prefixed">
         <span class="field-prefix" id="pfx-price">USD</span>
-        <input type="number" id="vehiclePrice" placeholder="0" inputmode="decimal" autocomplete="off">
+        <input type="text" id="vehiclePrice" placeholder="0" inputmode="decimal" autocomplete="off">
       </div>
       <div class="formatted-display" id="fmt-price"></div>
     </div>
@@ -611,7 +611,7 @@
       <label id="lbl-discount">Cash Discount</label>
       <div class="field-prefixed">
         <span class="field-prefix" id="pfx-disc">USD</span>
-        <input type="number" id="cashDiscount" placeholder="0" inputmode="decimal" autocomplete="off">
+        <input type="text" id="cashDiscount" placeholder="0" inputmode="decimal" autocomplete="off">
       </div>
       <div class="formatted-display" id="fmt-disc"></div>
     </div>
@@ -628,7 +628,7 @@
         <div>
           <div class="field-prefixed">
             <span class="field-prefix" id="pfx-dp">USD</span>
-            <input type="number" id="downPayment" placeholder="0" inputmode="decimal" autocomplete="off">
+            <input type="text" id="downPayment" placeholder="0" inputmode="decimal" autocomplete="off">
           </div>
           <div class="formatted-display" id="fmt-dp"></div>
         </div>
@@ -647,7 +647,7 @@
       <label id="lbl-promo-val">Promotion Perceived Value</label>
       <div class="field-prefixed">
         <span class="field-prefix" id="pfx-promo">USD</span>
-        <input type="number" id="promoValue" placeholder="0" inputmode="decimal" autocomplete="off">
+        <input type="text" id="promoValue" placeholder="0" inputmode="decimal" autocomplete="off">
       </div>
       <div class="formatted-display" id="fmt-promo"></div>
     </div>
@@ -672,7 +672,7 @@
 
     <div class="field">
       <label id="lbl-rate">Monthly Interest Rate (%)</label>
-      <input type="number" id="interestRate" placeholder="e.g. 1.2" inputmode="decimal" step="0.01" autocomplete="off">
+      <input type="text" id="interestRate" placeholder="e.g. 1.2" inputmode="decimal" autocomplete="off">
     </div>
 
     <div class="field">
@@ -701,7 +701,7 @@
       <label id="lbl-acc">Accessories</label>
       <div class="field-prefixed">
         <span class="field-prefix" id="pfx-acc">USD</span>
-        <input type="number" id="accessories" placeholder="0" inputmode="decimal" autocomplete="off">
+        <input type="text" id="accessories" placeholder="0" inputmode="decimal" autocomplete="off">
       </div>
       <div class="formatted-display" id="fmt-acc"></div>
     </div>
@@ -709,7 +709,7 @@
       <label id="lbl-rtax">Road Tax (annual)</label>
       <div class="field-prefixed">
         <span class="field-prefix" id="pfx-rtax">USD</span>
-        <input type="number" id="roadTax" placeholder="0" inputmode="decimal" autocomplete="off">
+        <input type="text" id="roadTax" placeholder="0" inputmode="decimal" autocomplete="off">
       </div>
       <div class="formatted-display" id="fmt-rtax"></div>
     </div>
@@ -717,7 +717,7 @@
       <label id="lbl-ins">Comprehensive Insurance (annual)</label>
       <div class="field-prefixed">
         <span class="field-prefix" id="pfx-ins">USD</span>
-        <input type="number" id="insurance" placeholder="0" inputmode="decimal" autocomplete="off">
+        <input type="text" id="insurance" placeholder="0" inputmode="decimal" autocomplete="off">
       </div>
       <div class="formatted-display" id="fmt-ins"></div>
     </div>
@@ -731,11 +731,11 @@
     <div class="fx-row">
       <div class="fx-item">
         <label>USD → LAK</label>
-        <input type="number" id="fxUSDLAK" value="21000" inputmode="decimal" autocomplete="off">
+        <input type="text" id="fxUSDLAK" value="21000" inputmode="decimal" autocomplete="off">
       </div>
       <div class="fx-item">
         <label>USD → THB</label>
-        <input type="number" id="fxUSDTHB" value="36.5" inputmode="decimal" autocomplete="off">
+        <input type="text" id="fxUSDTHB" value="36.5" inputmode="decimal" autocomplete="off">
       </div>
     </div>
     <div style="font-size:10px; color:var(--muted); margin-top:8px;" id="lbl-fx-note">Update rates as needed. All values convert from USD base price.</div>
@@ -1188,19 +1188,26 @@ document.addEventListener('DOMContentLoaded', function() {
   // Down payment is special — handled separately (% vs AMT mode)
   document.getElementById('downPayment').addEventListener('input', function() {
     if (dpMode === 'amount') {
-      usdStore.dp = fromDisplay(parseFloat(this.value) || 0);
+      usdStore.dp = fromDisplay(parseFloat(sanitizeDecimalInput(this)) || 0);
+    } else {
+      sanitizeDecimalInput(this);
     }
     // In % mode, dp is derived from NTP — no store update needed here
     refreshAll();
   });
 
+  // Interest rate — decimal input, no other side effects needed on keystroke
+  document.getElementById('interestRate').addEventListener('input', function() {
+    sanitizeDecimalInput(this);
+  });
+
   // FX inputs — update rates then reconvert ALL fields
   document.getElementById('fxUSDLAK').addEventListener('input', function() {
-    FX_LAK = parseFloat(this.value) || 21000;
+    FX_LAK = parseFloat(sanitizeDecimalInput(this)) || 21000;
     reconvertAllFields();
   });
   document.getElementById('fxUSDTHB').addEventListener('input', function() {
-    FX_THB = parseFloat(this.value) || 36.5;
+    FX_THB = parseFloat(sanitizeDecimalInput(this)) || 36.5;
     reconvertAllFields();
   });
 
@@ -1344,10 +1351,22 @@ function setFieldFromUSD(fieldId, usdVal) {
     : parseFloat(disp.toFixed(2));
 }
 
+// Some iOS keyboards (region-dependent) emit "," as the decimal key instead of ".".
+// Normalize so typed decimals are never silently dropped.
+function sanitizeDecimalInput(el) {
+  var v = el.value.replace(',', '.').replace(/[^0-9.]/g, '');
+  var firstDot = v.indexOf('.');
+  if (firstDot !== -1) {
+    v = v.slice(0, firstDot + 1) + v.slice(firstDot + 1).replace(/\./g, '');
+  }
+  if (v !== el.value) el.value = v;
+  return v;
+}
+
 // Bind a money input: on every keystroke, parse display→USD, store, refresh
 function bindMoneyInput(fieldId, storeKey) {
   document.getElementById(fieldId).addEventListener('input', function() {
-    var displayVal = parseFloat(this.value) || 0;
+    var displayVal = parseFloat(sanitizeDecimalInput(this)) || 0;
     usdStore[storeKey] = fromDisplay(displayVal);
     refreshAll();
   });
